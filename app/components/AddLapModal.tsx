@@ -1,12 +1,8 @@
 import { useState } from "react";
-import {
-  CATEGORICAL_FIELDS,
-  CATEGORICAL_OPTIONS,
-  NUMERICAL_FIELDS,
-} from "../constants";
 import { IoClose } from "react-icons/io5";
-import { convertToLap, fieldToName } from "../utils";
-import { Lap } from "../types";
+import { Compound, Lap, LapType } from "../types";
+import { COMPOUNDS, LAP_TYPES } from "../constants";
+import { FaPlus } from "react-icons/fa6";
 
 type Props = {
   addLap: (lap: Lap) => void;
@@ -14,76 +10,108 @@ type Props = {
 };
 
 const AddLapModal: React.FC<Props> = ({ addLap, close }) => {
-  const [lap, setLap] = useState({
-    lapType: "Lap",
-    compound: "Soft",
-    lapTime: "",
-    stint: "",
-    tireLife: "",
-    trackStatus: "",
-    position: "",
-    airTemp: "",
-    humidity: "",
-    pressure: "",
-    rainfall: "No Rain",
-    trackTemp: "",
-    windDirection: "",
-    windSpeed: "",
-  });
+  const [lapType, setLapType] = useState<LapType>("Lap");
+  const [compound, setCompound] = useState<Compound>("Soft");
+  const [lapTime, setLapTime] = useState(1000);
+  const [tireLife, setTireLife] = useState(1);
 
-  const handleChange = (
-    event:
-      | React.ChangeEvent<HTMLSelectElement>
-      | React.ChangeEvent<HTMLInputElement>
-  ) => setLap({ ...lap, [event.target.name]: event.target.value });
+  const changeLapType = (event: React.ChangeEvent<HTMLSelectElement>) =>
+    setLapType(event.target.value as LapType);
+
+  const changeCompound = (event: React.ChangeEvent<HTMLSelectElement>) =>
+    setCompound(event.target.value as Compound);
+
+  const changeLapTime = (event: React.ChangeEvent<HTMLInputElement>) =>
+    setLapTime(Number(event.target.value));
+
+  const changeTireLife = (event: React.ChangeEvent<HTMLInputElement>) =>
+    setTireLife(Number(event.target.value));
 
   const handleSubmit = () => {
-    const convertedLap = convertToLap(lap);
-
-    if (!convertedLap) return;
-
-    console.log(convertedLap.lapType);
-    console.log(lap.lapType);
-
-    addLap(convertedLap);
+    addLap({ lapType, compound, lapTime, tireLife });
     close();
   };
 
   return (
     <div className="fixed top-0 h-screen w-screen flex justify-center items-center backdrop-brightness-75">
-      <div className="relative flex flex-col items-center bg-white p-5 rounded drop-shadow h-3/4 w-2/3">
+      <div className="relative flex flex-col gap-10 items-center bg-white p-5 rounded drop-shadow h-1/2 w-1/2">
         <button onClick={close} className="absolute top-5 right-5">
           <IoClose className="text-3xl" />
         </button>
 
         <h2 className="text-center font-bold uppercase text-4xl">Add Lap</h2>
 
-        {CATEGORICAL_FIELDS.map((field, index) => (
-          <div key={field}>
-            <label htmlFor={field}>{fieldToName(field)}</label>
-            <select name={field} value={lap[field]} onChange={handleChange}>
-              {CATEGORICAL_OPTIONS[index].map(option => (
+        <div className="flex flex-col gap-2">
+          <div className="flex items-center gap-2">
+            <label htmlFor="Lap Type" className="font-medium uppercase">
+              Lap Type
+            </label>
+            <select
+              name="Lap Type"
+              value={lapType}
+              onChange={changeLapType}
+              className="border border-gray-300 rounded p-1 drop-shadow"
+            >
+              {LAP_TYPES.map(option => (
                 <option value={option} key={option}>
                   {option}
                 </option>
               ))}
             </select>
           </div>
-        ))}
 
-        {NUMERICAL_FIELDS.map(field => (
-          <div key={field}>
-            <label htmlFor={field}>{fieldToName(field)}</label>
+          <div className="flex items-center gap-2">
+            <label htmlFor="Lap Time" className="font-medium uppercase">
+              Lap Time
+            </label>
             <input
-              name={field}
-              value={lap[field]}
-              onChange={handleChange}
-              className="border border-gray-300 rounded p-1"
+              name="Lap Time"
+              type="number"
+              value={lapTime}
+              onChange={changeLapTime}
+              className="border border-gray-300 rounded p-1 drop-shadow"
             />
           </div>
-        ))}
 
-        <button onClick={handleSubmit}>Add</button>
+          <div className="flex items-center gap-2">
+            <label htmlFor="Tire Compound" className="font-medium uppercase">
+              Tire Compound
+            </label>
+            <select
+              name="Tire Compound"
+              value={compound}
+              onChange={changeCompound}
+              className="border border-gray-300 rounded p-1 drop-shadow"
+            >
+              {COMPOUNDS.map(option => (
+                <option value={option} key={option}>
+                  {option}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <label htmlFor="Tire Life" className="font-medium uppercase">
+              Tire Life
+            </label>
+            <input
+              name="Tire Life"
+              type="number"
+              value={tireLife}
+              onChange={changeTireLife}
+              className="border border-gray-300 rounded p-1 drop-shadow"
+            />
+          </div>
+        </div>
+
+        <button
+          onClick={handleSubmit}
+          className="flex items-center gap-1 bg-gray-900 text-white px-20 py-3 uppercase rounded transition-colors hover:bg-gray-800"
+        >
+          <FaPlus />
+          Add
+        </button>
       </div>
     </div>
   );

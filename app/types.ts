@@ -1,7 +1,7 @@
 import { COMPOUNDS, LAP_TYPES, RAINFALL_OPTIONS } from "./constants";
 
-type Compound = (typeof COMPOUNDS)[number];
-type LapType = (typeof LAP_TYPES)[number];
+export type Compound = (typeof COMPOUNDS)[number];
+export type LapType = (typeof LAP_TYPES)[number];
 type RainfallOption = (typeof RAINFALL_OPTIONS)[number];
 
 export type Lap = {
