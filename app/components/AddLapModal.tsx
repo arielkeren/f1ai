@@ -5,11 +5,12 @@ import { COMPOUNDS, LAP_TYPES } from "../constants";
 import { FaPlus } from "react-icons/fa6";
 
 type Props = {
-  addLap: (lap: Lap) => void;
+  changeLap: (lap: Lap, lapNumber: number) => void;
+  lapNumber: number;
   close: () => void;
 };
 
-const AddLapModal: React.FC<Props> = ({ addLap, close }) => {
+const AddLapModal: React.FC<Props> = ({ changeLap, lapNumber, close }) => {
   const [lapType, setLapType] = useState<LapType>("Lap");
   const [compound, setCompound] = useState<Compound>("Soft");
   const [lapTime, setLapTime] = useState(1000);
@@ -28,7 +29,7 @@ const AddLapModal: React.FC<Props> = ({ addLap, close }) => {
     setTireLife(Number(event.target.value));
 
   const handleSubmit = () => {
-    addLap({ lapType, compound, lapTime, tireLife });
+    changeLap({ lapType, compound, lapTime, tireLife }, lapNumber);
     close();
   };
 
@@ -39,7 +40,9 @@ const AddLapModal: React.FC<Props> = ({ addLap, close }) => {
           <IoClose className="text-3xl" />
         </button>
 
-        <h2 className="text-center font-bold uppercase text-4xl">Add Lap</h2>
+        <h2 className="text-center font-bold uppercase text-4xl">
+          Set Lap {lapNumber}
+        </h2>
 
         <div className="flex flex-col gap-2">
           <div className="flex items-center gap-2">
@@ -110,7 +113,7 @@ const AddLapModal: React.FC<Props> = ({ addLap, close }) => {
           className="flex items-center gap-1 bg-gray-900 text-white px-20 py-3 uppercase rounded transition-colors hover:bg-gray-800"
         >
           <FaPlus />
-          Add
+          Set
         </button>
       </div>
     </div>
