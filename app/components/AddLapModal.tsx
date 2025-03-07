@@ -33,7 +33,7 @@ const AddLapModal: React.FC<Props> = ({ addLap, close }) => {
   };
 
   return (
-    <div className="fixed top-0 h-screen w-screen flex justify-center items-center backdrop-brightness-75">
+    <div className="fixed top-0 left-0 h-screen w-screen flex justify-center items-center backdrop-brightness-75 z-10">
       <div className="relative flex flex-col gap-10 items-center bg-white p-5 rounded drop-shadow h-1/2 w-1/2">
         <button onClick={close} className="absolute top-5 right-5">
           <IoClose className="text-3xl" />
