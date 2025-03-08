@@ -19,7 +19,7 @@ export type Lap = {
   tireLife: number;
 };
 
-type Weather = {
+export type Weather = {
   airTemp: number;
   humidity: number;
   pressure: number;
