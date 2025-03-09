@@ -11,7 +11,7 @@ type Props = {
   close: () => void;
 };
 
-const AddLapModal: React.FC<Props> = ({
+const RacerModal: React.FC<Props> = ({
   selectedDriver,
   selectedTeam,
   changeRacer,
@@ -38,7 +38,9 @@ const AddLapModal: React.FC<Props> = ({
           <IoClose className="text-3xl" />
         </button>
 
-        <h2 className="text-center font-bold uppercase text-4xl">Settings</h2>
+        <h2 className="text-center font-bold uppercase text-4xl">
+          Racer Options
+        </h2>
 
         <div className="flex flex-col gap-2">
           <div className="flex items-center gap-2">
@@ -90,4 +92,4 @@ const AddLapModal: React.FC<Props> = ({
   );
 };
 
-export default AddLapModal;
+export default RacerModal;

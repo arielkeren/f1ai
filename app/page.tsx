@@ -6,22 +6,17 @@ import Header from "./components/Header";
 import InitialLaps from "./components/InitialLaps";
 import { BsStars } from "react-icons/bs";
 import useModel from "./hooks/useModel";
+import { STARTING_WEATHER } from "./constants";
 
 const Home: React.FC = () => {
   const [laps, setLaps] = useState<(Lap | null)[]>([null, null, null]);
   const [driver, setDriver] = useState<Driver>("AIT");
   const [team, setTeam] = useState<Team>("Alfa Romeo");
-  const [weather, setWeather] = useState<Weather>({
-    rainfall: "No Rain",
-    airTemp: 23.71641746992163,
-    humidity: 52.11558948946384,
-    pressure: 983.7748390253755,
-    trackTemp: 35.58323067721967,
-    windDirection: 163.08201356148103,
-    windSpeed: 1.6702765889690634,
-  });
+  const [weather, setWeather] = useState<Weather>(STARTING_WEATHER);
 
   const runModel = useModel();
+
+  const changeWeather = (newWeather: Weather) => setWeather(newWeather);
 
   const changeRacer = (driver: Driver, team: Team) => {
     setDriver(driver);
@@ -43,8 +38,10 @@ const Home: React.FC = () => {
   return (
     <>
       <Header
-        selectedDriver={driver}
-        selectedTeam={team}
+        weather={weather}
+        driver={driver}
+        team={team}
+        changeWeather={changeWeather}
         changeRacer={changeRacer}
       />
       <InitialLaps laps={laps} changeLap={changeLap} />

@@ -1,3 +1,5 @@
+import { Weather } from "./types";
+
 export const COMPOUNDS = [
   "HARD",
   "HYPERSOFT",
@@ -119,4 +121,14 @@ export const MAX = {
   trackTemp: 57.5,
   windDirection: 359,
   windSpeed: 8.6,
+};
+
+export const STARTING_WEATHER: Weather = {
+  rainfall: "No Rain",
+  airTemp: 23.71641746992163,
+  humidity: 52.11558948946384,
+  pressure: 983.7748390253755,
+  trackTemp: 35.58323067721967,
+  windDirection: 163.08201356148103,
+  windSpeed: 1.6702765889690634,
 };

@@ -12,7 +12,7 @@ type Props = {
 
 const AddLapModal: React.FC<Props> = ({ changeLap, lapNumber, close }) => {
   const [lapType, setLapType] = useState<LapType>("Lap");
-  const [compound, setCompound] = useState<Compound>("Soft");
+  const [compound, setCompound] = useState<Compound>("SOFT");
   const [lapTime, setLapTime] = useState(1000);
   const [tireLife, setTireLife] = useState(1);
 

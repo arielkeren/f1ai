@@ -1,39 +1,70 @@
 import useModal from "../hooks/useModal";
-import { Driver, Team } from "../types";
-import { IoMdSettings } from "react-icons/io";
-import SettingsModal from "./SettingsModal";
+import { Driver, Team, Weather } from "../types";
+import { IoCarSport } from "react-icons/io5";
+import { FaCloud } from "react-icons/fa6";
+import RacerModal from "./RacerModal";
+import WeatherModal from "./WeatherModal";
 
 type Props = {
-  selectedDriver: Driver;
-  selectedTeam: Team;
+  weather: Weather;
+  driver: Driver;
+  team: Team;
+  changeWeather: (newWeather: Weather) => void;
   changeRacer: (driver: Driver, team: Team) => void;
 };
 
 const Header: React.FC<Props> = ({
-  selectedDriver,
-  selectedTeam,
+  weather,
+  driver,
+  team,
+  changeWeather,
   changeRacer,
 }) => {
-  const { isOpen, open, close } = useModal();
+  const {
+    isOpen: isRacerOpen,
+    open: openRacer,
+    close: closeRacer,
+  } = useModal();
+  const {
+    isOpen: isWeatherOpen,
+    open: openWeather,
+    close: closeWeather,
+  } = useModal();
 
   return (
     <>
-      <div className="flex justify-center items-center p-5 bg-gray-900 drop-shadow-xl">
+      <div className="relative flex justify-center items-center p-5 bg-gray-900 drop-shadow-xl">
         <h1 className="text-5xl font-bold font-mono m-auto text-white">F1AI</h1>
-        <button
-          onClick={open}
-          className="bg-gray-800 flex justify-center items-center w-12 h-12 rounded-full transition-all hover:bg-gray-700 hover:rotate-180"
-        >
-          <IoMdSettings className="text-white text-3xl" />
-        </button>
+        <div className="absolute right-5 flex gap-2">
+          <button
+            onClick={openWeather}
+            className="bg-gray-800 flex justify-center items-center w-12 h-12 rounded-xl transition-colors hover:bg-gray-700"
+          >
+            <FaCloud className="text-white text-3xl" />
+          </button>
+          <button
+            onClick={openRacer}
+            className="bg-gray-800 flex justify-center items-center w-12 h-12 rounded-xl transition-colors hover:bg-gray-700"
+          >
+            <IoCarSport className="text-white text-3xl" />
+          </button>
+        </div>
       </div>
 
-      {isOpen && (
-        <SettingsModal
-          selectedDriver={selectedDriver}
-          selectedTeam={selectedTeam}
+      {isWeatherOpen && (
+        <WeatherModal
+          selectedWeather={weather}
+          changeWeather={changeWeather}
+          close={closeWeather}
+        />
+      )}
+
+      {isRacerOpen && (
+        <RacerModal
+          selectedDriver={driver}
+          selectedTeam={team}
           changeRacer={changeRacer}
-          close={close}
+          close={closeRacer}
         />
       )}
     </>

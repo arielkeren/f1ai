@@ -1,3 +1,5 @@
+import { NumericalWeatherField } from "./types";
+
 export const formatLapTime = (ms: number) => {
   const minutes = Math.floor(ms / 60000);
   const seconds = Math.floor((ms % 60000) / 1000);
@@ -16,4 +18,21 @@ export const encode = (value: string, values: readonly string[]) => {
   encoded[values.indexOf(value)] = 1;
 
   return encoded;
+};
+
+export const weatherFieldToName = (field: NumericalWeatherField) => {
+  switch (field) {
+    case "airTemp":
+      return "Air Temperature";
+    case "humidity":
+      return "Humidity";
+    case "pressure":
+      return "Pressure";
+    case "trackTemp":
+      return "Track Temperature";
+    case "windDirection":
+      return "Wind Direction";
+    case "windSpeed":
+      return "Wind Speed";
+  }
 };
