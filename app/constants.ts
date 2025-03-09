@@ -102,3 +102,21 @@ export const STD = {
   windSpeed: 1.1501414448318825,
   lapTime: 14584.550919510772,
 };
+
+export const MIN = {
+  airTemp: 8.9,
+  humidity: 5,
+  pressure: 778.5,
+  trackTemp: 13.8,
+  windDirection: 0,
+  windSpeed: 0,
+};
+
+export const MAX = {
+  airTemp: 37.2,
+  humidity: 94.8,
+  pressure: 1023.3,
+  trackTemp: 57.5,
+  windDirection: 359,
+  windSpeed: 8.6,
+};
