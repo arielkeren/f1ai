@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { IoClose } from "react-icons/io5";
 import { RainfallOption, Weather } from "../types";
-import { NUMERICAL_WEATHER, RAINFALL_OPTIONS } from "../constants";
+import { MAX, MIN, NUMERICAL_WEATHER, RAINFALL_OPTIONS } from "../constants";
 import { ImArrowUp } from "react-icons/im";
 import { weatherFieldToName } from "../utils";
 
@@ -66,10 +66,12 @@ const WeatherModal: React.FC<Props> = ({
               </label>
               <input
                 name={field}
-                type="number"
+                type="range"
+                min={MIN[field]}
+                max={MAX[field]}
                 value={weather[field]}
                 onChange={changeField}
-                className="border border-gray-300 rounded p-1 drop-shadow"
+                className="h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
               />
             </div>
           ))}
