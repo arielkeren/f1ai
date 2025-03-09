@@ -2,7 +2,7 @@ import { FaPlus } from "react-icons/fa6";
 import useModal from "../hooks/useModal";
 import { Lap } from "../types";
 import { formatLapTime } from "../utils";
-import AddLapModal from "./AddLapModal";
+import LapModal from "./LapModal";
 
 type Props = {
   lap: Lap | null;
@@ -39,11 +39,7 @@ const LapCard: React.FC<Props> = ({ lap, lapNumber, changeLap }) => {
       )}
 
       {isOpen && (
-        <AddLapModal
-          changeLap={changeLap}
-          lapNumber={lapNumber}
-          close={close}
-        />
+        <LapModal changeLap={changeLap} lapNumber={lapNumber} close={close} />
       )}
     </>
   );
