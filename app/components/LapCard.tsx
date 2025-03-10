@@ -1,30 +1,32 @@
 import { FaPlus } from "react-icons/fa6";
 import useModal from "../hooks/useModal";
-import { Lap } from "../types";
 import { formatLapTime } from "../utils";
 import LapModal from "./LapModal";
 
 type Props = {
-  lap: Lap | null;
+  lapTime: number;
   lapNumber: number;
-  changeLap: (lap: Lap, lapNumber: number) => void;
+  changeLap: (lapTime: number, lapNumber: number) => void;
+  isEditable: boolean;
 };
 
-const LapCard: React.FC<Props> = ({ lap, lapNumber, changeLap }) => {
+const LapCard: React.FC<Props> = ({
+  lapTime,
+  lapNumber,
+  changeLap,
+  isEditable,
+}) => {
   const { isOpen, open, close } = useModal();
 
   return (
     <>
-      {lap ? (
+      {lapTime ? (
         <div
-          onClick={open}
+          onClick={isEditable ? open : undefined}
           className="bg-gray-100 rounded flex flex-col justify-center items-center drop-shadow h-24 cursor-pointer transition-colors hover:bg-gray-200"
         >
           <h2 className="uppercase font-bold text-xl">Lap {lapNumber}</h2>
-          <p className="font-medium uppercase">
-            {formatLapTime(lap.lapTime)}, {lap.lapType}, {lap.compound},{" "}
-            {lap.tireLife}
-          </p>
+          <p className="font-medium uppercase">{formatLapTime(lapTime)}</p>
         </div>
       ) : (
         <div

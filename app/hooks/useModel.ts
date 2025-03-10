@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { loadLayersModel, LayersModel, tensor } from "@tensorflow/tfjs";
-import { Driver, Lap, Team, Weather } from "../types";
+import { Compound, Driver, Lap, Team, Weather } from "../types";
 import {
   COMPOUNDS,
   DRIVERS,
@@ -36,54 +36,53 @@ const useModel = () => {
     return processedWeather;
   };
 
-  const preprocessNumericalLap = (lap: Lap) => {
-    const processedLap = [];
-
-    processedLap.push(standardize(lap.lapTime, MEAN.lapTime, STD.lapTime));
-    processedLap.push(standardize(lap.tireLife, MEAN.tireLife, STD.tireLife));
-
-    return processedLap;
-  };
-
-  const preprocessCategoricalLap = (lap: Lap) =>
-    encode(lap.lapType, LAP_TYPES).concat(encode(lap.compound, COMPOUNDS));
-
-  const preprocessRacer = (driver: Driver, team: Team) =>
-    encode(driver, DRIVERS).concat(encode(team, TEAMS));
-
   const preprocess = (
-    lap: Lap,
-    weather: Weather,
+    lapTime: number,
+    tireLife: number,
     driver: Driver,
-    team: Team
+    team: Team,
+    initialCompound: Compound,
+    weather: Weather
   ) => {
-    const processed = [];
+    const array = [];
 
-    processed.push(...preprocessNumericalLap(lap));
-    processed.push(...preprocessWeather(weather));
-    processed.push(...preprocessCategoricalLap(lap));
-    processed.push(...preprocessRacer(driver, team));
+    array.push(standardize(lapTime, MEAN.lapTime, STD.lapTime));
+    array.push(standardize(tireLife, MEAN.tireLife, STD.tireLife));
 
-    return processed;
+    array.push(...preprocessWeather(weather));
+
+    array.push(...encode("Lap", LAP_TYPES));
+    array.push(...encode(initialCompound, COMPOUNDS));
+
+    array.push(...encode(driver, DRIVERS));
+    array.push(...encode(team, TEAMS));
+
+    return array;
   };
 
-  const runModel = async (
-    laps: Lap[],
-    weather: Weather,
-    driver: Driver,
-    team: Team
-  ) => {
-    if (!model || laps.length !== 3) return null;
-
-    const processedArray = laps.map(lap =>
-      preprocess(lap, weather, driver, team)
-    );
+  const makePrediction = async (processedArray: number[][]) => {
+    if (!model) return null;
 
     const processedTensor = tensor(processedArray).reshape([1, 3, 73]);
-
     const prediction = await (model.predict(processedTensor) as any).array();
 
     return prediction[0][2][0];
+  };
+
+  const runModel = async (
+    lapTimes: number[],
+    driver: Driver,
+    team: Team,
+    initialCompound: Compound,
+    weather: Weather
+  ) => {
+    if (!model || lapTimes.length !== 3) return null;
+
+    const processedArray = lapTimes.map((lapTime, index) =>
+      preprocess(lapTime, index + 1, driver, team, initialCompound, weather)
+    );
+
+    return await makePrediction(processedArray);
   };
 
   return runModel;

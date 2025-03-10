@@ -1,18 +1,18 @@
-import { Lap } from "../types";
 import LapCard from "./LapCard";
 
 type Props = {
-  laps: (Lap | null)[];
-  changeLap: (lap: Lap, lapNumber: number) => void;
+  lapTimes: number[];
+  changeLap: (lapTime: number, lapNumber: number) => void;
 };
 
-const InitialLaps: React.FC<Props> = ({ laps, changeLap }) => (
+const InitialLaps: React.FC<Props> = ({ lapTimes, changeLap }) => (
   <div className="grid grid-cols-3 gap-4 p-5">
-    {laps.map((lap, index) => (
+    {lapTimes.map((lapTime, index) => (
       <LapCard
-        lap={lap}
+        lapTime={lapTime}
         lapNumber={index + 1}
         changeLap={changeLap}
+        isEditable={true}
         key={index}
       />
     ))}

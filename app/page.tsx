@@ -7,15 +7,19 @@ import InitialLaps from "./components/InitialLaps";
 import { BsStars } from "react-icons/bs";
 import useModel from "./hooks/useModel";
 import { COMPOUNDS, DRIVERS, STARTING_WEATHER, TEAMS } from "./constants";
+import StartGeneratingButton from "./components/StartGeneratingButton";
+import Strategy from "./components/Strategy";
 
 const Home: React.FC = () => {
-  const [laps, setLaps] = useState<(Lap | null)[]>([null, null, null]);
+  const [initialLapTimes, setInitialLapTimes] = useState<number[]>([0, 0, 0]);
   const [driver, setDriver] = useState<Driver>(DRIVERS[0]);
   const [team, setTeam] = useState<Team>(TEAMS[0]);
   const [initialCompound, setInitialCompound] = useState<Compound>(
     COMPOUNDS[0]
   );
   const [weather, setWeather] = useState<Weather>(STARTING_WEATHER);
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [strategy, setStrategy] = useState<(number | Compound)[]>([]);
 
   const runModel = useModel();
 
@@ -31,16 +35,42 @@ const Home: React.FC = () => {
     setInitialCompound(initialCompound);
   };
 
-  const changeLap = (lap: Lap, lapNumber: number) => {
-    const newLaps = [...laps];
-    newLaps[lapNumber - 1] = lap;
-    setLaps(newLaps);
+  const changeLap = (lapTime: number, lapNumber: number) => {
+    const newLaps = [...initialLapTimes];
+    newLaps[lapNumber - 1] = lapTime;
+    setInitialLapTimes(newLaps);
   };
 
-  const startGenerating = () => {
-    if (laps.some(lap => lap === null)) return;
+  const startGenerating = async () => {
+    if (initialLapTimes.some(lapTime => lapTime === 0)) return;
 
-    runModel(laps as Lap[], weather, driver, team);
+    setIsGenerating(true);
+    setStrategy([]);
+    const currentLapTimes = [...initialLapTimes];
+    let currentCompound = initialCompound;
+
+    for (let i = 0; i < 47; i++) {
+      const prediction = await runModel(
+        currentLapTimes,
+        driver,
+        team,
+        currentCompound,
+        weather
+      );
+
+      if (i % 10 === 9) {
+        currentCompound =
+          COMPOUNDS[Math.floor(Math.random() * COMPOUNDS.length)];
+        setStrategy(prevStrategy => [...prevStrategy, currentCompound]);
+      }
+
+      setStrategy(prevStrategy => [...prevStrategy, prediction]);
+
+      currentLapTimes.push(prediction);
+      currentLapTimes.shift();
+    }
+
+    setIsGenerating(false);
   };
 
   return (
@@ -53,17 +83,13 @@ const Home: React.FC = () => {
         changeWeather={changeWeather}
         changeRacer={changeRacer}
       />
-      <InitialLaps laps={laps} changeLap={changeLap} />
+      <InitialLaps lapTimes={initialLapTimes} changeLap={changeLap} />
       <hr className="border border-gray-200" />
-      <div className="flex justify-center mt-10">
-        <button
-          onClick={startGenerating}
-          className="flex items-center gap-1 text-xl font-medium bg-gray-900 text-white px-20 py-5 uppercase rounded transition-colors hover:bg-gray-800"
-        >
-          <BsStars />
-          Start Generating
-        </button>
-      </div>
+      <StartGeneratingButton
+        isGenerating={isGenerating}
+        startGenerating={startGenerating}
+      />
+      <Strategy strategy={strategy} />
     </>
   );
 };
