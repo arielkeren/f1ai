@@ -1,26 +1,34 @@
 "use client";
 
 import { useState } from "react";
-import { Driver, Lap, Team, Weather } from "./types";
+import { Compound, Driver, Lap, Team, Weather } from "./types";
 import Header from "./components/Header";
 import InitialLaps from "./components/InitialLaps";
 import { BsStars } from "react-icons/bs";
 import useModel from "./hooks/useModel";
-import { STARTING_WEATHER } from "./constants";
+import { COMPOUNDS, DRIVERS, STARTING_WEATHER, TEAMS } from "./constants";
 
 const Home: React.FC = () => {
   const [laps, setLaps] = useState<(Lap | null)[]>([null, null, null]);
-  const [driver, setDriver] = useState<Driver>("AIT");
-  const [team, setTeam] = useState<Team>("Alfa Romeo");
+  const [driver, setDriver] = useState<Driver>(DRIVERS[0]);
+  const [team, setTeam] = useState<Team>(TEAMS[0]);
+  const [initialCompound, setInitialCompound] = useState<Compound>(
+    COMPOUNDS[0]
+  );
   const [weather, setWeather] = useState<Weather>(STARTING_WEATHER);
 
   const runModel = useModel();
 
   const changeWeather = (newWeather: Weather) => setWeather(newWeather);
 
-  const changeRacer = (driver: Driver, team: Team) => {
+  const changeRacer = (
+    driver: Driver,
+    team: Team,
+    initialCompound: Compound
+  ) => {
     setDriver(driver);
     setTeam(team);
+    setInitialCompound(initialCompound);
   };
 
   const changeLap = (lap: Lap, lapNumber: number) => {
@@ -41,6 +49,7 @@ const Home: React.FC = () => {
         weather={weather}
         driver={driver}
         team={team}
+        initialCompound={initialCompound}
         changeWeather={changeWeather}
         changeRacer={changeRacer}
       />

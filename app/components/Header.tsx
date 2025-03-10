@@ -1,5 +1,5 @@
 import useModal from "../hooks/useModal";
-import { Driver, Team, Weather } from "../types";
+import { Compound, Driver, Team, Weather } from "../types";
 import { IoCarSport } from "react-icons/io5";
 import { FaCloud } from "react-icons/fa6";
 import RacerModal from "./RacerModal";
@@ -9,14 +9,16 @@ type Props = {
   weather: Weather;
   driver: Driver;
   team: Team;
+  initialCompound: Compound;
   changeWeather: (newWeather: Weather) => void;
-  changeRacer: (driver: Driver, team: Team) => void;
+  changeRacer: (driver: Driver, team: Team, initialCompound: Compound) => void;
 };
 
 const Header: React.FC<Props> = ({
   weather,
   driver,
   team,
+  initialCompound,
   changeWeather,
   changeRacer,
 }) => {
@@ -63,6 +65,7 @@ const Header: React.FC<Props> = ({
         <RacerModal
           selectedDriver={driver}
           selectedTeam={team}
+          selectedInitialCompound={initialCompound}
           changeRacer={changeRacer}
           close={closeRacer}
         />
