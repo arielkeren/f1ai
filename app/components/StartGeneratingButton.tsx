@@ -13,7 +13,10 @@ const StartGeneratingButton: React.FC<Props> = ({
   <div className="flex justify-center mt-10">
     <button
       onClick={startGenerating}
-      className="flex justify-center items-center gap-2 text-xl font-medium bg-gray-900 text-white w-96 h-16 uppercase rounded transition-colors hover:bg-gray-800"
+      disabled={isGenerating}
+      className={`flex justify-center items-center gap-2 text-xl font-medium text-white w-96 h-16 uppercase rounded transition-colors ${
+        isGenerating ? "bg-gray-700" : "bg-gray-900 hover:bg-gray-800"
+      }`}
     >
       {isGenerating ? (
         <>

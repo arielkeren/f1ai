@@ -1,6 +1,7 @@
 import { NumericalWeatherField } from "./types";
 
 export const formatLapTime = (ms: number) => {
+  ms = Math.round(ms);
   const minutes = Math.floor(ms / 60000);
   const seconds = Math.floor((ms % 60000) / 1000);
   const milliseconds = ms % 1000;

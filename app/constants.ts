@@ -106,6 +106,7 @@ export const STD = {
 };
 
 export const MIN = {
+  lapTime: 55808,
   airTemp: 8.9,
   humidity: 5,
   pressure: 778.5,
@@ -115,6 +116,7 @@ export const MIN = {
 };
 
 export const MAX = {
+  lapTime: 150970,
   airTemp: 37.2,
   humidity: 94.8,
   pressure: 1023.3,

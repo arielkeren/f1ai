@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Compound, Driver, Lap, Team, Weather } from "./types";
+import { Compound, Driver, Lap, LapType, Team, Weather } from "./types";
 import Header from "./components/Header";
 import InitialLaps from "./components/InitialLaps";
 import { BsStars } from "react-icons/bs";
@@ -19,7 +19,7 @@ const Home: React.FC = () => {
   );
   const [weather, setWeather] = useState<Weather>(STARTING_WEATHER);
   const [isGenerating, setIsGenerating] = useState(false);
-  const [strategy, setStrategy] = useState<(number | Compound)[]>([]);
+  const [strategy, setStrategy] = useState<(number[] | Compound)[]>([]);
 
   const runModel = useModel();
 
@@ -46,6 +46,8 @@ const Home: React.FC = () => {
 
     setIsGenerating(true);
     setStrategy([]);
+
+    const pitStop = Math.floor(Math.random() * 8) + 2;
     const currentLapTimes = [...initialLapTimes];
     let currentCompound = initialCompound;
 
@@ -55,16 +57,20 @@ const Home: React.FC = () => {
         driver,
         team,
         currentCompound,
-        weather
+        weather,
+        i % 10 === pitStop - 1 ? "Inlap" : i % 10 === pitStop ? "Outlap" : "Lap"
       );
 
-      if (i % 10 === 9) {
+      if (i % 10 === pitStop) {
         currentCompound =
           COMPOUNDS[Math.floor(Math.random() * COMPOUNDS.length)];
-        setStrategy(prevStrategy => [...prevStrategy, currentCompound]);
-      }
-
-      setStrategy(prevStrategy => [...prevStrategy, prediction]);
+        setStrategy(prevStrategy => [
+          ...prevStrategy,
+          currentCompound,
+          [prediction, i + 4],
+        ]);
+      } else
+        setStrategy(prevStrategy => [...prevStrategy, [prediction, i + 4]]);
 
       currentLapTimes.push(prediction);
       currentLapTimes.shift();

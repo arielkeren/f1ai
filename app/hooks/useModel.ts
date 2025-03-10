@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
 import { loadLayersModel, LayersModel, tensor } from "@tensorflow/tfjs";
-import { Compound, Driver, Lap, Team, Weather } from "../types";
+import { Compound, Driver, Lap, LapType, Team, Weather } from "../types";
 import {
   COMPOUNDS,
   DRIVERS,
   LAP_TYPES,
+  MAX,
   MEAN,
+  MIN,
   NUMERICAL_WEATHER,
   STD,
   TEAMS,
@@ -42,7 +44,8 @@ const useModel = () => {
     driver: Driver,
     team: Team,
     initialCompound: Compound,
-    weather: Weather
+    weather: Weather,
+    lapType: LapType
   ) => {
     const array = [];
 
@@ -51,7 +54,7 @@ const useModel = () => {
 
     array.push(...preprocessWeather(weather));
 
-    array.push(...encode("Lap", LAP_TYPES));
+    array.push(...encode(lapType, LAP_TYPES));
     array.push(...encode(initialCompound, COMPOUNDS));
 
     array.push(...encode(driver, DRIVERS));
@@ -73,13 +76,22 @@ const useModel = () => {
     lapTimes: number[],
     driver: Driver,
     team: Team,
-    initialCompound: Compound,
-    weather: Weather
+    compound: Compound,
+    weather: Weather,
+    lapType: LapType
   ) => {
     if (!model || lapTimes.length !== 3) return null;
 
     const processedArray = lapTimes.map((lapTime, index) =>
-      preprocess(lapTime, index + 1, driver, team, initialCompound, weather)
+      preprocess(
+        Math.max(Math.min(lapTime, MAX.lapTime), MIN.lapTime),
+        index + 1,
+        driver,
+        team,
+        compound,
+        weather,
+        lapType
+      )
     );
 
     return await makePrediction(processedArray);
