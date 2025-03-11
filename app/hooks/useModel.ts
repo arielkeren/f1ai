@@ -76,7 +76,7 @@ const useModel = () => {
     lapTimes: number[],
     driver: Driver,
     team: Team,
-    compound: Compound,
+    compounds: Compound[],
     weather: Weather,
     lapType: LapType
   ) => {
@@ -88,7 +88,7 @@ const useModel = () => {
         index + 1,
         driver,
         team,
-        compound,
+        compounds[index],
         weather,
         lapType
       )
