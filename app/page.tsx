@@ -53,7 +53,9 @@ const Home: React.FC = () => {
       initialCompound,
       initialCompound,
     ];
+    const currentTireLife = [1, 2, 3];
     let chosenCompound = initialCompound;
+    let updatedTireLife = 4;
 
     for (let i = 0; i < 47; i++) {
       const prediction = await runModel(
@@ -62,12 +64,14 @@ const Home: React.FC = () => {
         team,
         currentCompounds,
         weather,
+        currentTireLife,
         i % 10 === pitStop - 1 ? "Inlap" : i % 10 === pitStop ? "Outlap" : "Lap"
       );
 
       if (i % 10 === pitStop) {
         chosenCompound =
           COMPOUNDS[Math.floor(Math.random() * COMPOUNDS.length)];
+        updatedTireLife = 1;
         setStrategy(prevStrategy => [
           ...prevStrategy,
           chosenCompound,
@@ -81,6 +85,11 @@ const Home: React.FC = () => {
 
       currentCompounds.push(chosenCompound);
       currentCompounds.shift();
+
+      currentTireLife.push(updatedTireLife);
+      currentTireLife.shift();
+
+      updatedTireLife++;
     }
 
     setIsGenerating(false);

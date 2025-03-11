@@ -78,6 +78,7 @@ const useModel = () => {
     team: Team,
     compounds: Compound[],
     weather: Weather,
+    tireLife: number[],
     lapType: LapType
   ) => {
     if (!model || lapTimes.length !== 3) return null;
@@ -85,7 +86,7 @@ const useModel = () => {
     const processedArray = lapTimes.map((lapTime, index) =>
       preprocess(
         Math.max(Math.min(lapTime, MAX.lapTime), MIN.lapTime),
-        index + 1,
+        tireLife[index],
         driver,
         team,
         compounds[index],
