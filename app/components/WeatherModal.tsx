@@ -58,12 +58,14 @@ const WeatherModal: React.FC<Props> = ({
           <input
             name={field}
             type="range"
+            step="0.01"
             min={MIN[field]}
             max={MAX[field]}
             value={weather[field]}
             onChange={changeField}
             className="h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
           />
+          <p>{Math.round(weather[field] * 100) / 100}</p>
         </div>
       ))}
     </Modal>

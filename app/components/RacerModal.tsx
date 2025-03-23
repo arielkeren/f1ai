@@ -1,13 +1,19 @@
 import { useState } from "react";
-import { Compound, Driver, Team } from "../types";
-import { COMPOUNDS, DRIVERS, TEAMS } from "../constants";
+import { Compound, Driver, Team, Circuit } from "../types";
+import { COMPOUNDS, DRIVERS, TEAMS, CIRCUIT_NAMES } from "../constants";
 import Modal from "./Modal";
 
 type Props = {
   selectedDriver: Driver;
   selectedTeam: Team;
   selectedInitialCompound: Compound;
-  changeRacer: (driver: Driver, team: Team, initialCompound: Compound) => void;
+  selectedCircuit: Circuit;
+  changeRacer: (
+    driver: Driver,
+    team: Team,
+    initialCompound: Compound,
+    circuit: Circuit
+  ) => void;
   close: () => void;
 };
 
@@ -15,6 +21,7 @@ const RacerModal: React.FC<Props> = ({
   selectedDriver,
   selectedTeam,
   selectedInitialCompound,
+  selectedCircuit,
   changeRacer,
   close,
 }) => {
@@ -23,6 +30,7 @@ const RacerModal: React.FC<Props> = ({
   const [initialCompound, setInitialCompound] = useState<Compound>(
     selectedInitialCompound
   );
+  const [circuit, setCircuit] = useState<Circuit>(selectedCircuit);
 
   const changeDriver = (event: React.ChangeEvent<HTMLSelectElement>) =>
     setDriver(event.target.value as Driver);
@@ -33,8 +41,11 @@ const RacerModal: React.FC<Props> = ({
   const changeInitialCompound = (event: React.ChangeEvent<HTMLSelectElement>) =>
     setInitialCompound(event.target.value as Compound);
 
+  const changeCircuit = (event: React.ChangeEvent<HTMLSelectElement>) =>
+    setCircuit(event.target.value as Circuit);
+
   const handleSubmit = () => {
-    changeRacer(driver, team, initialCompound);
+    changeRacer(driver, team, initialCompound, circuit);
     close();
   };
 
@@ -89,6 +100,24 @@ const RacerModal: React.FC<Props> = ({
           {COMPOUNDS.map(currentCompound => (
             <option value={currentCompound} key={currentCompound}>
               {currentCompound}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      <div className="flex items-center gap-2">
+        <label htmlFor="Circuit" className="font-medium uppercase">
+          Circuit
+        </label>
+        <select
+          name="Circuit"
+          value={circuit}
+          onChange={changeCircuit}
+          className="border border-gray-300 rounded p-1 drop-shadow"
+        >
+          {CIRCUIT_NAMES.map(currentCircuit => (
+            <option value={currentCircuit} key={currentCircuit}>
+              {currentCircuit}
             </option>
           ))}
         </select>

@@ -11,6 +11,17 @@ export const COMPOUNDS = [
   "WET",
 ] as const;
 
+export const NO_RAINFALL_COMPOUNDS = [
+  "HARD",
+  "HYPERSOFT",
+  "MEDIUM",
+  "SOFT",
+  "SUPERSOFT",
+  "ULTRASOFT",
+] as const;
+
+export const RAINFALL_COMPOUNDS = ["INTERMEDIATE", "WET"] as const;
+
 export const TEAMS = [
   "Alfa Romeo",
   "Alfa Romeo Racing",
@@ -82,6 +93,64 @@ export const NUMERICAL_WEATHER = [
   "windDirection",
   "windSpeed",
 ] as const;
+
+export const CIRCUIT_NAMES = [
+  "Melbourne Grand Prix Circuit",
+  "Shanghai International Circuit",
+  "Suzuka",
+  "Bahrain International Circuit",
+  "Jeddah Street Circuit",
+  "Hard Rock Stadium Circuit",
+  "Autodromo Internazionale Enzo e Dino Ferrari",
+  "Circuit de Monaco",
+  "Circuit de Barcelona-Catalunya",
+  "Circuit Gilles Villeneuve",
+  "Red Bull Ring",
+  "Silverstone Circuit",
+  "Circuit de Spa-Francorchamps",
+  "Hungaroring",
+  "Zandvoort",
+  "Autodromo Nazionale di Monza",
+  "Baku City Circuit",
+  "Marina Bay Street Circuit",
+  "Circuit of the Americas",
+  "Autodromo Hermanos Rodriguez",
+  "Autodromo Jose Carlos Pace",
+  "Las Vegas Street Circuit",
+  "Lusail Circuit",
+  "Yas Marina Circuit",
+] as const;
+
+export const ONE_STOP_PIT_STOPS = [
+  15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30,
+] as const;
+
+export const CIRCUIT_TO_LAPS = {
+  "Melbourne Grand Prix Circuit": 58,
+  "Shanghai International Circuit": 56,
+  Suzuka: 53,
+  "Bahrain International Circuit": 57,
+  "Jeddah Street Circuit": 50,
+  "Hard Rock Stadium Circuit": 57,
+  "Autodromo Internazionale Enzo e Dino Ferrari": 63,
+  "Circuit de Monaco": 78,
+  "Circuit de Barcelona-Catalunya": 66,
+  "Circuit Gilles Villeneuve": 70,
+  "Red Bull Ring": 71,
+  "Silverstone Circuit": 52,
+  "Circuit de Spa-Francorchamps": 44,
+  Hungaroring: 70,
+  Zandvoort: 72,
+  "Autodromo Nazionale di Monza": 53,
+  "Baku City Circuit": 51,
+  "Marina Bay Street Circuit": 61,
+  "Circuit of the Americas": 56,
+  "Autodromo Hermanos Rodriguez": 71,
+  "Autodromo Jose Carlos Pace": 71,
+  "Las Vegas Street Circuit": 50,
+  "Lusail Circuit": 57,
+  "Yas Marina Circuit": 55,
+};
 
 export const MEAN = {
   tireLife: 15.77451125074759,

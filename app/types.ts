@@ -4,12 +4,14 @@ import {
   LAP_TYPES,
   RAINFALL_OPTIONS,
   TEAMS,
+  CIRCUIT_NAMES,
 } from "./constants";
 
 export type Compound = (typeof COMPOUNDS)[number];
 export type LapType = (typeof LAP_TYPES)[number];
 export type Driver = (typeof DRIVERS)[number];
 export type Team = (typeof TEAMS)[number];
+export type Circuit = (typeof CIRCUIT_NAMES)[number];
 export type RainfallOption = (typeof RAINFALL_OPTIONS)[number];
 export type NumericalWeatherField =
   | "airTemp"
