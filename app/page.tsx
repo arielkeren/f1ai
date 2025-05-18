@@ -15,6 +15,11 @@ import {
   NO_RAINFALL_COMPOUNDS,
   CIRCUIT_NAMES,
   ONE_STOP_PIT_STOPS,
+  TIRE_WEAR,
+  STARTING_FUEL,
+  CIRCUIT_TO_DISTANCE,
+  KG_FUEL_PER_KM,
+  SECONDS_PER_KG_FUEL,
 } from "./constants";
 import StartGeneratingButton from "./components/StartGeneratingButton";
 import Strategy from "./components/Strategy";
@@ -77,7 +82,7 @@ const Home: React.FC = () => {
         const currentStrategy: (number[] | Compound)[] = [];
 
         for (let i = 4; i < CIRCUIT_TO_LAPS[circuit] + 1; i++) {
-          const prediction = await runModel(
+          let prediction = await runModel(
             currentLapTimes,
             driver,
             team,
@@ -148,13 +153,13 @@ const Home: React.FC = () => {
 
           if (i === pitStop) {
             updatedTireLife = 1;
-            setOneStopStrategy(prevStrategy => [
+            setOneStopStrategy((prevStrategy) => [
               ...prevStrategy,
               compound,
               [prediction, i],
             ]);
           } else
-            setOneStopStrategy(prevStrategy => [
+            setOneStopStrategy((prevStrategy) => [
               ...prevStrategy,
               [prediction, i],
             ]);
@@ -173,7 +178,7 @@ const Home: React.FC = () => {
 
         if (bestStrategyTime > currentStrategyTime) {
           bestStrategyTime = currentStrategyTime;
-          setOneStopStrategy(prevStrategy => {
+          setOneStopStrategy((prevStrategy) => {
             bestStrategy = prevStrategy;
             return [];
           });
@@ -186,7 +191,7 @@ const Home: React.FC = () => {
   };
 
   const startGenerating = async () => {
-    if (initialLapTimes.some(lapTime => lapTime === 0)) return;
+    if (initialLapTimes.some((lapTime) => lapTime === 0)) return;
 
     setIsGenerating(true);
     setOneStopStrategy([]);

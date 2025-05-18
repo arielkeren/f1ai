@@ -8,20 +8,20 @@ type Props = {
 };
 
 const LapModal: React.FC<Props> = ({ changeLap, lapNumber, close }) => {
-  const [lapTime, setLapTime] = useState(1000);
+  const [lapTime, setLapTime] = useState(60);
 
   const changeLapTime = (event: React.ChangeEvent<HTMLInputElement>) =>
     setLapTime(Number(event.target.value));
 
   const handleSubmit = () => {
-    changeLap(lapTime, lapNumber);
+    changeLap(lapTime * 1000, lapNumber);
     close();
   };
 
   return (
     <Modal title={`Set Lap ${lapNumber}`} submit={handleSubmit} close={close}>
       <label htmlFor="Lap Time" className="font-medium uppercase">
-        Lap Time
+        Lap Time (Seconds)
       </label>
       <input
         name="Lap Time"
