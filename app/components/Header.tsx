@@ -1,85 +1,53 @@
-import useModal from "../hooks/useModal";
-import { Compound, Driver, Team, Weather, Circuit } from "../types";
-import { IoCarSport } from "react-icons/io5";
-import { FaCloud } from "react-icons/fa6";
-import RacerModal from "./RacerModal";
-import WeatherModal from "./WeatherModal";
+import Image from "next/image";
 
-type Props = {
-  weather: Weather;
-  driver: Driver;
-  team: Team;
-  initialCompound: Compound;
-  circuit: Circuit;
-  changeWeather: (newWeather: Weather) => void;
-  changeRacer: (
-    driver: Driver,
-    team: Team,
-    initialCompound: Compound,
-    circuit: Circuit
-  ) => void;
-};
-
-const Header: React.FC<Props> = ({
-  weather,
-  driver,
-  team,
-  initialCompound,
-  circuit,
-  changeWeather,
-  changeRacer,
-}) => {
-  const {
-    isOpen: isRacerOpen,
-    open: openRacer,
-    close: closeRacer,
-  } = useModal();
-  const {
-    isOpen: isWeatherOpen,
-    open: openWeather,
-    close: closeWeather,
-  } = useModal();
-
-  return (
-    <>
-      <div className="relative flex justify-center items-center p-5 bg-gray-900 drop-shadow-xl">
-        <h1 className="text-5xl font-bold font-mono m-auto text-white">F1AI</h1>
-        <div className="absolute right-5 flex gap-2">
-          <button
-            onClick={openWeather}
-            className="bg-gray-800 flex justify-center items-center w-12 h-12 rounded-xl transition-colors hover:bg-gray-700"
-          >
-            <FaCloud className="text-white text-3xl" />
-          </button>
-          <button
-            onClick={openRacer}
-            className="bg-gray-800 flex justify-center items-center w-12 h-12 rounded-xl transition-colors hover:bg-gray-700"
-          >
-            <IoCarSport className="text-white text-3xl" />
-          </button>
-        </div>
-      </div>
-
-      {isWeatherOpen && (
-        <WeatherModal
-          selectedWeather={weather}
-          changeWeather={changeWeather}
-          close={closeWeather}
-        />
-      )}
-
-      {isRacerOpen && (
-        <RacerModal
-          selectedDriver={driver}
-          selectedTeam={team}
-          selectedInitialCompound={initialCompound}
-          selectedCircuit={circuit}
-          changeRacer={changeRacer}
-          close={closeRacer}
-        />
-      )}
-    </>
-  );
-};
+const Header: React.FC = () => (
+  <header className="relative flex justify-between items-center px-5 py-3 bg-primary drop-shadow-xl">
+    <Image src="/images/logo.png" alt="" width="200" height="200" />
+    <nav className="flex justify-center flex-wrap gap-4 text-2xl text-white">
+      <a
+        href="index.html"
+        className="hover:bg-red-500 rounded-xl flex items-center px-2 py-3 justify-center transition-colors"
+      >
+        Home
+      </a>
+      <a
+        href="teams.html"
+        className="hover:bg-red-500 rounded-xl flex items-center px-2 py-3 justify-center"
+      >
+        Teams
+      </a>
+      <a
+        href="drivers.html"
+        className="hover:bg-red-500 rounded-xl flex items-center px-2 py-3 justify-center"
+      >
+        Drivers
+      </a>
+      <a
+        href="circuits.html"
+        className="hover:bg-red-500 rounded-xl flex items-center px-2 py-3 justify-center"
+      >
+        Circuits
+      </a>
+      <a
+        href="standings.html"
+        className="hover:bg-red-500 rounded-xl flex items-center px-2 py-3 justify-center"
+      >
+        Standings
+      </a>
+      <a
+        href="https://f1ai.netlify.app"
+        className="hover:bg-red-500 rounded-xl flex items-center px-2 py-3 justify-center"
+      >
+        Strategy
+      </a>
+      <a
+        href="memes.html"
+        className="hover:bg-red-500 rounded-xl flex items-center px-2 py-3 justify-center"
+      >
+        Memes
+      </a>
+    </nav>
+  </header>
+);
 
 export default Header;

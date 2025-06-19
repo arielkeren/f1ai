@@ -1,5 +1,7 @@
 import { Weather } from "./types";
 
+export const PIT_STOP_PENALTY_MS = 22000;
+
 export const COMPOUNDS = ["SOFT", "MEDIUM", "HARD"] as const;
 
 export const TEAMS = [

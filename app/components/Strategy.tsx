@@ -1,26 +1,41 @@
-import { Compound } from "../types";
-import LapCard from "./LapCard";
-import PitStop from "./PitStop";
+import { COMPOUNDS } from "../constants";
+import { formatRaceTime } from "../utils";
 
 type Props = {
-  strategy: (number[] | Compound)[];
+  strategies: {
+    time: number;
+    laps: number[];
+    combo: number[];
+  }[];
 };
 
-const Strategy: React.FC<Props> = ({ strategy }) => (
-  <div className="grid grid-cols-3 gap-4 p-5">
-    {strategy.map((current, index) =>
-      typeof current === "string" ? (
-        <PitStop compound={current} key={index} />
-      ) : (
-        <LapCard
-          lapTime={current[0]}
-          lapNumber={current[1]}
-          changeLap={() => {}}
-          isEditable={false}
-          key={index}
-        />
-      )
-    )}
+const Strategy: React.FC<Props> = ({ strategies }) => (
+  <div className="flex flex-col gap-6 p-5 mt-7">
+    <h2 className="text-4xl font-bold text-center text-white uppercase">
+      Top 5 Strategies
+    </h2>
+    <div className="flex flex-col gap-4">
+      {strategies.map((strategy, index) => (
+        <div
+          key={index * 100}
+          className="bg-neutral-600 text-white rounded flex flex-col justify-center items-center drop-shadow p-4"
+        >
+          <h2 className="font-bold text-xl py-2 px-24 rounded-xl uppercase bg-neutral-700">
+            Strategy {index + 1}
+          </h2>
+          <p className="text-lg font-medium">
+            Time: {formatRaceTime(strategy.time)}
+          </p>
+          <p className="text-lg font-medium">
+            Stints: {strategy.laps.join(", ")}
+          </p>
+          <p className="text-lg font-medium">
+            Combo:{" "}
+            {strategy.combo.map(compound => COMPOUNDS[compound]).join(", ")}
+          </p>
+        </div>
+      ))}
+    </div>
   </div>
 );
 

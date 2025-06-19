@@ -6,13 +6,19 @@ import LapModal from "./LapModal";
 type Props = {
   lapTime: number;
   lapNumber: number;
-  changeLap: (lapTime: number, lapNumber: number) => void;
+  compoundIndex: number;
+  changeLap: (
+    lapTime: number,
+    lapNumber: number,
+    compoundIndex: number
+  ) => void;
   isEditable: boolean;
 };
 
 const LapCard: React.FC<Props> = ({
   lapTime,
   lapNumber,
+  compoundIndex,
   changeLap,
   isEditable,
 }) => {
@@ -31,7 +37,7 @@ const LapCard: React.FC<Props> = ({
       ) : (
         <div
           onClick={open}
-          className="bg-gray-900 p-4 flex flex-col justify-center items-center rounded cursor-pointer h-24 drop-shadow transition-colors hover:bg-gray-800"
+          className="bg-neutral-600 p-4 flex flex-col justify-center items-center rounded cursor-pointer h-24 drop-shadow transition-colors hover:bg-gray-500"
         >
           <h2 className="font-bold uppercase text-xl text-white">
             Lap {lapNumber}
@@ -41,7 +47,13 @@ const LapCard: React.FC<Props> = ({
       )}
 
       {isOpen && (
-        <LapModal changeLap={changeLap} lapNumber={lapNumber} close={close} />
+        <LapModal
+          selectedLapTime={lapTime / 1000}
+          changeLap={changeLap}
+          lapNumber={lapNumber}
+          compoundIndex={compoundIndex}
+          close={close}
+        />
       )}
     </>
   );

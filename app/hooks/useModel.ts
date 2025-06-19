@@ -1,104 +1,100 @@
-import { useEffect, useState } from "react";
-import { loadLayersModel, LayersModel, tensor } from "@tensorflow/tfjs";
-import { Compound, Driver, Lap, LapType, Team, Weather } from "../types";
+import { useEffect, useState } from "react"; // Import React hooks
+import { loadLayersModel, LayersModel, tensor } from "@tensorflow/tfjs"; // Import TensorFlow.js functions and types
+import { Compound, Driver, Team, Weather } from "../types"; // Import type definitions
 import {
-  COMPOUNDS,
-  DRIVERS,
-  LAP_TYPES,
-  MAX,
-  MEAN,
-  MIN,
-  NUMERICAL_WEATHER,
-  STD,
-  TEAMS,
+  COMPOUNDS, // Array of all compounds
+  DRIVERS, // Array of all drivers
+  MAX, // Max values for normalization
+  MEAN, // Mean values for normalization
+  MIN, // Min values for normalization
+  WEATHER, // Array of weather fields
+  STD, // Standard deviation values for normalization
+  TEAMS, // Array of all teams
 } from "../constants";
-import { encode, standardize } from "../utils";
+import { encode, standardize } from "../utils"; // Import utility functions
 
 const useModel = () => {
-  const [model, setModel] = useState<LayersModel | null>(null);
+  // Custom React hook for loading and running the model
+  const [model, setModel] = useState<LayersModel | null>(null); // State to store the loaded model
 
   useEffect(() => {
+    // Effect to load the model on mount
     const loadModel = async () =>
-      setModel(await loadLayersModel("/model/model.json"));
+      setModel(await loadLayersModel("/model/model.json")); // Load model from URL and set state
 
-    loadModel();
-  }, []);
+    loadModel(); // Call the async loader
+  }, []); // Run only once on mount
 
   const preprocessWeather = (weather: Weather) => {
-    const processedWeather = [];
+    // Preprocess weather fields
+    const processedWeather: number[] = []; // Array to hold processed weather
 
-    NUMERICAL_WEATHER.forEach(field =>
+    WEATHER.forEach(field =>
       processedWeather.push(
-        standardize(weather[field], MEAN[field], STD[field])
+        standardize(weather[field], MEAN[field], STD[field]) // Standardize each weather field
       )
     );
 
-    processedWeather.push(1 ? weather.rainfall === "Rainy" : 0);
-
-    return processedWeather;
+    return processedWeather; // Return processed weather array
   };
 
   const preprocess = (
-    lapTime: number,
-    tireLife: number,
-    driver: Driver,
-    team: Team,
-    initialCompound: Compound,
-    weather: Weather,
-    lapType: LapType
+    lapTime: number, // Lap time value
+    tireLife: number, // Tire life value
+    driver: Driver, // Driver identifier
+    team: Team, // Team identifier
+    compound: Compound, // Compound identifier
+    weather: Weather // Weather object
   ) => {
-    const array = [];
+    const array = []; // Array to hold all processed features
 
-    array.push(standardize(lapTime, MEAN.lapTime, STD.lapTime));
-    array.push(standardize(tireLife, MEAN.tireLife, STD.tireLife));
+    array.push(standardize(lapTime, MEAN.lapTime, STD.lapTime)); // Standardize lap time
+    array.push(standardize(tireLife, MEAN.tireLife, STD.tireLife)); // Standardize tire life
 
-    array.push(...preprocessWeather(weather));
+    array.push(...preprocessWeather(weather)); // Add processed weather features
 
-    array.push(...encode(lapType, LAP_TYPES));
-    array.push(...encode(initialCompound, COMPOUNDS));
+    array.push(...encode(compound, COMPOUNDS)); // One-hot encode compound
+    array.push(...encode(driver, DRIVERS)); // One-hot encode driver
+    array.push(...encode(team, TEAMS)); // One-hot encode team
 
-    array.push(...encode(driver, DRIVERS));
-    array.push(...encode(team, TEAMS));
-
-    return array;
+    return array; // Return processed feature array
   };
 
   const makePrediction = async (processedArray: number[][]) => {
-    if (!model) return null;
+    // Run the model prediction
+    if (!model) return null; // Return null if model not loaded
 
-    const processedTensor = tensor(processedArray).reshape([1, 3, 73]);
-    const prediction = await (model.predict(processedTensor) as any).array();
+    const processedTensor = tensor(processedArray).reshape([1, 3, 64]); // Convert input to tensor and reshape
+    const prediction = await (model.predict(processedTensor) as any).array(); // Run prediction and get result array
 
-    return prediction[0][2][0];
+    return prediction[0][0]; // Return the predicted value
   };
 
   const runModel = async (
-    lapTimes: number[],
-    driver: Driver,
-    team: Team,
-    compounds: Compound[],
-    weather: Weather,
-    tireLife: number[],
-    lapType: LapType
+    lapTimes: number[], // Array of lap times
+    tireLife: number[], // Array of tire life values
+    compound: Compound, // Compound identifier
+    driver: Driver, // Driver identifier
+    team: Team, // Team identifier
+    weather: Weather // Weather object
   ) => {
-    if (!model || lapTimes.length !== 3) return null;
+    if (!model || lapTimes.length !== 3) return null; // Require model and 3 lap times
 
     const processedArray = lapTimes.map((lapTime, index) =>
       preprocess(
-        Math.max(Math.min(lapTime, MAX.lapTime), MIN.lapTime),
-        tireLife[index],
-        driver,
-        team,
-        compounds[index],
-        weather,
-        lapType
+        Math.max(Math.min(lapTime, MAX.lapTime), MIN.lapTime), // Clamp lap time to min/max
+        tireLife[index], // Tire life for this lap
+        driver, // Driver
+        team, // Team
+        compound, // Compound
+        weather // Weather
       )
     );
 
-    return await makePrediction(processedArray);
+    return await makePrediction(processedArray); // Run prediction and return result
   };
 
-  return runModel;
+  return runModel; // Return the runModel function from the hook
 };
 
-export default useModel;
+export default useModel; // Export the custom hook
